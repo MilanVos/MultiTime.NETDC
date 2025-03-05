@@ -57,7 +57,7 @@ export class TicketManager {
     private setupInactivityChecker() {
         setInterval(() => {
             this.checkInactiveTickets();
-        }, 30 * 60 * 1000); // Check every 30 minutes
+        }, 30 * 60 * 1000); 
     }
 
     private async checkInactiveTickets() {
@@ -76,10 +76,8 @@ export class TicketManager {
         
         const channel = await this.createTicket(guild, user, description, category);
         
-        // Set priority-specific settings
         await this.setPrioritySettings(channel, ticketPriority!);
         
-        // Update statistics
         this.ticketStats.totalTickets++;
         this.ticketStats.openTickets++;
         
@@ -121,7 +119,6 @@ export class TicketManager {
     }
 
     public async createTicket(guild: Guild, user: User, reason: string, category: string): Promise<TextChannel> {
-        // Check for existing ticket in this category
         if (await this.hasExistingTicket(guild, user, category)) {
             throw new Error(`Je hebt al een actief ticket in de categorie: ${category}`);
         }

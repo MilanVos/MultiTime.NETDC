@@ -2,17 +2,20 @@ import { Client, Collection, ClientOptions } from 'discord.js';
 import { Command } from './Command';
 import { Event } from './Event';
 import { TicketManager } from '../managers/TicketManager';
-import { readdirSync } from 'fs';
+import { ApplicationManager } from '../managers/ApplicationManager';
 import { join } from 'path';
+import { readdirSync } from 'fs';
 
 export class BotClient extends Client {
     public commands: Collection<string, Command> = new Collection();
     public events: Collection<string, Event> = new Collection();
     public ticketManager: TicketManager;
+    public applicationManager: ApplicationManager;
 
     constructor(options: ClientOptions) {
         super(options);
         this.ticketManager = new TicketManager(this);
+        this.applicationManager = new ApplicationManager(this);
     }
 
     public async init(token: string): Promise<void> {
@@ -23,7 +26,7 @@ export class BotClient extends Client {
 
     private async loadCommands(): Promise<void> {
         const commandsPath = join(__dirname, '..', 'commands');
-        const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.ts'));
+        const commandFiles = readdirSync(commandsPath).filter((file: string) => file.endsWith('.ts'));
 
         for (const file of commandFiles) {
             const filePath = join(commandsPath, file);
@@ -37,7 +40,7 @@ export class BotClient extends Client {
 
     private async loadEvents(): Promise<void> {
         const eventsPath = join(__dirname, '..', 'events');
-        const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
+        const eventFiles = readdirSync(eventsPath).filter((file: string) => file.endsWith('.ts'));
 
         for (const file of eventFiles) {
             const filePath = join(eventsPath, file);
